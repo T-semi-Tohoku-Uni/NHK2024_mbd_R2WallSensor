@@ -98,6 +98,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_FDCAN1_Init();
   /* USER CODE BEGIN 2 */
+  printf("Initialized\r\n");
   uint8_t TxData[1] = {};
 
   FDCAN_TxHeaderTypeDef TxHeader;
@@ -117,8 +118,10 @@ int main(void)
   while (1)
   {
 	  HAL_Delay(10);
-	  TxData[0] = (HAL_GPIO_ReadPin(Sensor1_GPIO_Port, Sensor1_Pin) << 1) | HAL_GPIO_ReadPin(Sensor2_GPIO_Port, Sensor2_Pin);
-	  if(HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK){
+	  //TxData[0] = (HAL_GPIO_ReadPin(Sensor1_GPIO_Port, Sensor1_Pin) << 1) | HAL_GPIO_ReadPin(Sensor2_GPIO_Port, Sensor2_Pin);
+	  printf("TxData:%d\r\n",TxData[0]);
+	  if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK) {
+		  printf("FDCAN ERROR\r\n");
 		  Error_Handler();
 	  }
     /* USER CODE END WHILE */
@@ -283,7 +286,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : Sensor2_Pin Sensor1_Pin */
   GPIO_InitStruct.Pin = Sensor2_Pin|Sensor1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
