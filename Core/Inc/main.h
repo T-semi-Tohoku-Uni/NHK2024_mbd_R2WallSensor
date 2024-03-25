@@ -57,14 +57,34 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SIG6_Pin GPIO_PIN_0
+#define SIG6_GPIO_Port GPIOA
+#define SIG6_EXTI_IRQn EXTI0_IRQn
+#define SIG1_Pin GPIO_PIN_1
+#define SIG1_GPIO_Port GPIOA
+#define SIG1_EXTI_IRQn EXTI1_IRQn
 #define USART2_TX_Pin GPIO_PIN_2
 #define USART2_TX_GPIO_Port GPIOA
 #define USART2_RX_Pin GPIO_PIN_3
 #define USART2_RX_GPIO_Port GPIOA
-#define Sensor2_Pin GPIO_PIN_9
-#define Sensor2_GPIO_Port GPIOA
-#define Sensor1_Pin GPIO_PIN_10
-#define Sensor1_GPIO_Port GPIOA
+#define SIG5_Pin GPIO_PIN_4
+#define SIG5_GPIO_Port GPIOA
+#define SIG5_EXTI_IRQn EXTI4_IRQn
+#define SIG4_Pin GPIO_PIN_5
+#define SIG4_GPIO_Port GPIOA
+#define SIG4_EXTI_IRQn EXTI9_5_IRQn
+#define SIG3_Pin GPIO_PIN_6
+#define SIG3_GPIO_Port GPIOA
+#define SIG3_EXTI_IRQn EXTI9_5_IRQn
+#define SIG2_Pin GPIO_PIN_7
+#define SIG2_GPIO_Port GPIOA
+#define SIG2_EXTI_IRQn EXTI9_5_IRQn
+#define SIG8_Pin GPIO_PIN_8
+#define SIG8_GPIO_Port GPIOA
+#define SIG8_EXTI_IRQn EXTI9_5_IRQn
+#define SIG7_Pin GPIO_PIN_9
+#define SIG7_GPIO_Port GPIOA
+#define SIG7_EXTI_IRQn EXTI9_5_IRQn
 #define T_SWDIO_Pin GPIO_PIN_13
 #define T_SWDIO_GPIO_Port GPIOA
 #define T_SWCLK_Pin GPIO_PIN_14

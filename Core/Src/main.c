@@ -46,6 +46,15 @@ FDCAN_HandleTypeDef hfdcan1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+GPIO_TypeDef *SIGs[8] = {
+		SIG1_GPIO_Port, SIG2_GPIO_Port, SIG3_GPIO_Port, SIG4_GPIO_Port,
+		SIG5_GPIO_Port, SIG6_GPIO_Port, SIG7_GPIO_Port, SIG8_GPIO_Port
+};
+
+uint16_t SIGPins[8] = {
+		SIG1_Pin, SIG2_Pin, SIG3_Pin, SIG4_Pin,
+		SIG5_Pin, SIG6_Pin, SIG7_Pin, SIG8_Pin
+};
 
 /* USER CODE END PV */
 
@@ -117,9 +126,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_Delay(10);
-	  //TxData[0] = (HAL_GPIO_ReadPin(Sensor1_GPIO_Port, Sensor1_Pin) << 1) | HAL_GPIO_ReadPin(Sensor2_GPIO_Port, Sensor2_Pin);
-	  printf("TxData:%d\r\n",TxData[0]);
+	  HAL_Delay(200);
+	  for(uint8_t i = 2; i<8; i++){
+		  printf("SIG%d:%d\r\n	", i, HAL_GPIO_ReadPin(SIGs[i], SIGPins[i]));
+	  }
 	  if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK) {
 		  printf("FDCAN ERROR\r\n");
 		  Error_Handler();
@@ -283,11 +293,26 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  /*Configure GPIO pins : Sensor2_Pin Sensor1_Pin */
-  GPIO_InitStruct.Pin = Sensor2_Pin|Sensor1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  /*Configure GPIO pins : SIG6_Pin SIG1_Pin SIG5_Pin SIG4_Pin
+                           SIG3_Pin SIG2_Pin SIG8_Pin SIG7_Pin */
+  GPIO_InitStruct.Pin = SIG6_Pin|SIG1_Pin|SIG5_Pin|SIG4_Pin
+                          |SIG3_Pin|SIG2_Pin|SIG8_Pin|SIG7_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
