@@ -64,6 +64,16 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_FDCAN1_Init(void);
 /* USER CODE BEGIN PFP */
+uint8_t getWallStatus(void){
+	uint8_t status = 0;
+	for(uint8_t i=0; i<8; i++){
+		uint8_t pinstate = HAL_GPIO_ReadPin(SIGs[i], SIGPins[i]);
+		//printf("Sensor%d:%d\r\n", i, pinstate);
+		status |= pinstate<<i;
+	}
+	//printf("Status:%x\r\n", status);
+	return status;
+}
 
 /* USER CODE END PFP */
 
@@ -126,10 +136,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_Delay(200);
-	  for(uint8_t i = 2; i<8; i++){
-		  printf("SIG%d:%d\r\n	", i, HAL_GPIO_ReadPin(SIGs[i], SIGPins[i]));
-	  }
+	  HAL_Delay(20);
+	  TxData[0] = getWallStatus();
 	  if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK) {
 		  printf("FDCAN ERROR\r\n");
 		  Error_Handler();
