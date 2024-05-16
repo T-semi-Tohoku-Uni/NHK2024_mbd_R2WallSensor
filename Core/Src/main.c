@@ -130,18 +130,40 @@ int main(void)
   	TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
   	TxHeader.MessageMarker = 0;
   	TxHeader.Identifier = CANID_WALL_DETECTION;
+
+  	uint8_t a = 0;
+  	uint8_t b = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_Delay(20);
-	  TxData[0] = getWallStatus();
-	  if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK) {
-		  printf("FDCAN ERROR\r\n");
-		  Error_Handler();
+	  uint8_t flag = 0;
+
+	  a = getWallStatus();
+	  HAL_Delay(5);
+	  b = getWallStatus();
+	  flag = (a == b)? 1 : 0;
+
+	  if(flag == 1 ){
+		  TxData[0] = b;
+		  printf("%x\r\n", TxData[0]);
+		  TxHeader.Identifier = CANID_WALL_DETECTION;
+		  if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK) {
+			  printf("FDCAN ERROR\r\n");
+			  Error_Handler();
+		  }
+
+
+		  if(TxData[0] == 0xCF){
+			  TxHeader.Identifier = CANID_VACUUMFAN;
+			  TxData[0] = 0;
+			  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData);
+			  printf("Fan OFF\r\n");
+		  }
 	  }
+	  HAL_Delay(5);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
