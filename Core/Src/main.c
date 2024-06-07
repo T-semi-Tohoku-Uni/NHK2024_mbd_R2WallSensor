@@ -136,8 +136,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_Delay(20);
+	  HAL_Delay(5);
 	  TxData[0] = getWallStatus();
+	  if(TxData[0] != 255){
+		  printf("%x \r\n", TxData[0]);
+	  }
 	  if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK) {
 		  printf("FDCAN ERROR\r\n");
 		  Error_Handler();
